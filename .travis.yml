@@ -24,6 +24,7 @@ install:
   - mv clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
   - brew unlink boost
   - brew install openssl
+  - brew install cmake
 
 script:
   - BOOSTVER=1.62.0
@@ -32,6 +33,7 @@ script:
   # Build python3 with clang3.9
   - brew unpack --patch --destdir=. python3
   - pushd python3-$PYTHONVER;
+  - ls -l /usr/local/Cellar/python3
   - ./configure \
     --prefix=/usr/local/Cellar/python3/$PYTHONVER \
     --enable-ipv6 \
