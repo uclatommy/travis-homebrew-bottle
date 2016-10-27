@@ -33,8 +33,9 @@ script:
   # Build python3 with clang3.9
   - brew unpack --patch --destdir=. python3
   - pushd python3-$PYTHONVER;
-  - ls /usr/local
-  - ls /usr/local/Cellar
+  - if [ ! -d /usr/local/Cellar/python3 ] ; then
+      mkdir /usr/local/Cellar/python3 ;
+    fi
   - if [ ! -d /usr/local/Cellar/python3/$PYTHONVER ] ; then
       mkdir /usr/local/Cellar/python3/$PYTHONVER ;
     fi
