@@ -33,7 +33,11 @@ script:
   # Build python3 with clang3.9
   - brew unpack --patch --destdir=. python3
   - pushd python3-$PYTHONVER;
-  - ls -l /usr/local/Cellar/python3
+  - ls /usr/local
+  - ls /usr/local/Cellar
+  - if [ ! -d /usr/local/Cellar/python3/$PYTHONVER ] ; then
+      mkdir /usr/local/Cellar/python3/$PYTHONVER ;
+    fi
   - ./configure \
     --prefix=/usr/local/Cellar/python3/$PYTHONVER \
     --enable-ipv6 \
