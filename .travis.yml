@@ -19,7 +19,7 @@ before_install:
   - brew update
 
 install:
-  - if [ ! -d downloads ]; then
+  - if [ ! -d downloads ] ; then
       mkdir downloads
     fi;
   - pushd downloads
