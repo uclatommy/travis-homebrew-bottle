@@ -2,6 +2,10 @@ sudo: false
 
 language: cpp
 
+cache:
+  directories:
+    - downloads
+
 os:
   - osx
 
@@ -15,13 +19,19 @@ before_install:
   - brew update
 
 install:
+  - if [ ! d downloads ]; then
+      mkdir downloads
+    fi;
+  - pushd downloads
   - if [ ! -f clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
     fi
   - tar -xf clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
-  - mkdir /usr/local/llvm39;
-  - chmod 744 clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
   - mv clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
+  - chmod 744 /usr/local/llvm39;
+  - popd;
+  - ls /usr/local/llvm39;
+  - ls /usr/local/llvm39/bin;
   - brew unlink boost
   - brew install openssl
   - brew install cmake
@@ -31,6 +41,7 @@ script:
   - PYTHONVER=3.5.2
   - OSXVER=$(sw_vers -productVersion)
   # Build python3 with clang3.9
+  - pushd downloads
   - brew unpack --patch --destdir=. python3
   - pushd python3-$PYTHONVER;
   - if [ ! -d /usr/local/Cellar/python3 ] ; then
@@ -48,6 +59,7 @@ script:
   - MACOSX_DEPLOYMENT_TARGET=$OSXVER;
   - make;
   - make install PYTHONAPPSDIR=/usr/local/Cellar/python3/$PYTHONVER;
+  - popd; popd;
   - brew link --overwrite python3
   - brew bottle python3
 
