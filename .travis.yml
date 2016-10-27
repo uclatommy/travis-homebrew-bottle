@@ -20,13 +20,13 @@ before_install:
 
 install:
   - ls
-  - if [ ! -d /Users/travis/downloads ] ; then
-      mkdir /Users/travis/downloads
+  - if [ ! -d downloads ] ; then
+      mkdir downloads ;
     fi;
-  - pushd /Users/travis/downloads
+  - pushd downloads
   - if [ ! -f clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
-    fi
+    fi;
   - tar -xf clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
   - mv clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
   - chmod 744 /usr/local/llvm39;
@@ -42,7 +42,7 @@ script:
   - PYTHONVER=3.5.2
   - OSXVER=$(sw_vers -productVersion)
   # Build python3 with clang3.9
-  - pushd /Users/travis/downloads
+  - pushd downloads
   - brew unpack --patch --destdir=. python3
   - pushd python3-$PYTHONVER;
   - if [ ! -d /usr/local/Cellar/python3 ] ; then
