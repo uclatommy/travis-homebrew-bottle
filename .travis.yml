@@ -63,7 +63,7 @@ script:
   - brew bottle python3
 
 before_deploy:
-  - export RELEASE_FILES=$(ls *.bottle.tar.gz)
+  - export RELEASE_FILES=$(ls *.bottle.*.tar.gz)
   - "echo 'Deploying files to Github: '$RELEASE_FILES"
 
 deploy:
