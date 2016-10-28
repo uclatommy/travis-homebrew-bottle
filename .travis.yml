@@ -73,5 +73,5 @@ deploy:
   file: "${RELEASE_FILES}"
   skip_cleanup: true
   on:
-    tags: true
+    repo: uclatommy/travis-homebrew-bottle
   overwrite: true
