@@ -39,7 +39,7 @@ install:
   - brew install valgrind --build-bottle
   - brew install python3 --build-bottle
   - brew tap homebrew/science
-  - brew install hdf5 --build-bottle
+  - travis_wait 20 brew install hdf5 --build-bottle
 
 script:
   - BOOSTVER=1.62.0
