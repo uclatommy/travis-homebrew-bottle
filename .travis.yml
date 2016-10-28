@@ -55,8 +55,9 @@ script:
   - tar -xf valgrind-3.12.0.tar.bz2
   - pushd valgrind-$VALGRIND
   - ./autogen.sh
-  - ./configure --disable-dependency-tracking --prefix=/usr/local/Cellar/valgrind/HEAD --enable-only64bit --build=amd64-darwin CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++
-  - make && make install
+  - ./configure --disable-dependency-tracking --prefix=/usr/local/Cellar/valgrind/$VALGRIND --enable-only64bit --build=amd64-darwin CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++
+  - make
+  - make install
   - brew link --overwrite valgrind
   - popd;
 # Build python3
