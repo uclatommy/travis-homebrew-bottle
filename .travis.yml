@@ -36,20 +36,31 @@ install:
   - brew unlink boost
   - brew install openssl
   - brew install cmake
+  - brew install valgrind
+  - brew install python3
 
 script:
   - BOOSTVER=1.62.0
   - PYTHONVER=3.5.2
   - OSXVER=$(sw_vers -productVersion)
-  # Build python3 with clang3.9
   - pushd downloads
-  - brew install python3
+# Build valgrind
+  - brew unlink valgrind
+  - brew unpack --patch --destdir=. --HEAD valgrind
+  - pushd valgrind-HEAD
+  - ./autogen.sh
+  - ./autogen.sh
+  - ./configure --disable-dependency-tracking --prefix=/usr/local/Cellar/valgrind/HEAD --enable-only64bit --build=amd64-darwin CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++
+  - make && make install
+  - brew link --overwrite valgrind
+  - popd;
+# Build python3
   - brew unlink python3
   - if [ ! -d python3-$PYTHONVER ] ; then
       brew unpack --patch --destdir=. python3;
     fi;
   - pushd python3-$PYTHONVER;
-  - ./configure --prefix=/usr/local/Cellar/python3/$PYTHONVER --enable-ipv6 --datarootdir=/usr/local/Cellar/python3/$PYTHONVER/share --datadir=/usr/local/Cellar/python3/$PYTHONVER/share --enable-shared --with-ensurepip --without-gcc CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++ LDFLAGS="$MACOS_SDK -L/usr/local/opt/openssl/lib" CPPFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK" CFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK" MACOSX_DEPLOYMENT_TARGET=$OSXVER;
+  - ./configure --prefix=/usr/local/Cellar/python3/$PYTHONVER --enable-ipv6 --datarootdir=/usr/local/Cellar/python3/$PYTHONVER/share --datadir=/usr/local/Cellar/python3/$PYTHONVER/share --enable-shared --with-ensurepip --without-gcc --with-valgrind CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++ LDFLAGS="$MACOS_SDK -L/usr/local/opt/openssl/lib" CPPFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK" CFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK";
   - CC=/usr/local/llvm39/bin/clang;
   - CXX=/usr/local/llvm39/bin/clang++;
   - LDFLAGS="$MACOS_SDK -L/usr/local/opt/openssl/lib";
@@ -60,10 +71,15 @@ script:
   - make install PYTHONAPPSDIR=/usr/local/Cellar/python3/$PYTHONVER;
   - popd; popd;
   - brew link --overwrite python3
+# Make bottles
+  - mkdir bottles && pushd bottles
+  - brew bottle valgrind
   - brew bottle python3
+  - popd
+  - cp libpython3.5m.a bottles/libpython3.5m.a
 
 before_deploy:
-  - export RELEASE_FILES=$(ls *.bottle.*.tar.gz)
+  - export RELEASE_FILES=$(ls bottles)
   - "echo 'Deploying files to Github: '$RELEASE_FILES"
 
 deploy:
