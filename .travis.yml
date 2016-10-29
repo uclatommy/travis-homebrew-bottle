@@ -93,7 +93,8 @@ deploy:
   provider: releases
   api_key:
     secure: "TqfrKR8qj8WNPcHvo6b9BhJmAYO0LEh8CI95UJ8W9RizWmiQPeq05nDyIoKW2gHvtgHmDnAWXr5je40yrQWq64EyogfaG+0gfJfdVV2cZcuJ4MSLW7sgEWwRaybHeKJjZTKVjrTA2EZDba3czYNclILbP+m1aq0nCzl37/+DdTkbGfkhxUcD7sBoPEYvAJWnOptKfsmOTwNE8bymnf4MutiI8H/8PQoj+SFJfLmGgfKU4PAVtE4CuY6Y9wZXsDv6jxSbIJxRhyY3Jki0npQ8tgv1iUQhc0W9OmFTEQ8AvdqHTaCF10F6CKwfGQWsEZyEbcqSy7ZzoFCuCTBM62u7z4EyXHSoeaK70Z2DWLfbiByOVB/Fg4t41y3JSgP/JUJY919gHi7FO/PBVuM8JwTxqkMqDvFiMhDi0hGwxZuJPb/NUJBBBK6jBfPpkWTlOIkVFET23WtE0+0TKoeeFZVFdJtPI0JlOCnmgjfvMgiUYt/JqKJvhBPa1iTu7iZKQp58NuuzLXn27yZrw2TaIOeH4Vnqz1Sf7JUL+IL8AHYeH/AtYNRCaKvvmDiVzSLL4zKzSQTde4ovWEPrExUUkRRCe26V0uJBosptEq7YftCoiLFDe1yEGRP1oK9K8h6hDHPxfaKTObGgA4tvzXgmSDm/Itanqpn62ChFHYPmowKpLWA="
-  file: "${RELEASE_FILES}"
+  file: bottles/*.gz
+  file_glob: true
   skip_cleanup: true
   on:
     tag: true
