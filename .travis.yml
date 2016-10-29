@@ -30,28 +30,29 @@ install:
   - mv clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
   - chmod 744 /usr/local/llvm39;
   - popd;
-  - brew unlink boost
   - brew install openssl
   - brew install cmake
   - brew install sqlite
   - brew install xz
   - brew install valgrind --build-bottle
   - brew install python3 --build-bottle
+  - brew unlink boost
+  - brew install boost --build-bottle
   - brew tap homebrew/science
   - brew install hdf5
 
 script:
   - BOOSTVER=1.62.0
   - PYTHONVER=3.5.2
-  - OSXVER=$(sw_vers -productVersion)
+  - OSXVER=10.11
   - VALGRIND=3.12.0
+  - HDF5=1.8.17
   - pushd downloads
 # Build valgrind
   - brew unlink valgrind
-  - if [ -d valgrind-$VALGRIND ] ; then
-      rm -r valgrind-$VALGRIND ;
+  - if [ ! -d valgrind-$VALGRIND ] ; then
+      brew unpack --patch --destdir=. valgrind ;
     fi;
-  - brew unpack --patch --destdir=. valgrind
   - pushd valgrind-$VALGRIND
   - ./autogen.sh
   - ./configure --disable-dependency-tracking --prefix=/usr/local/Cellar/valgrind/$VALGRIND --enable-only64bit --build=amd64-darwin CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++
@@ -77,12 +78,44 @@ script:
   - popd
   - brew link --overwrite python3
 # Build hdf5
-
+  - brew unlink hdf5
+  - if [ ! -d hdf5-$HDF5 ] ; then
+      brew unpack --patch --destdir=. hdf5;
+    fi
+  - pushd hdf5-$HDF5
+  - ./configure --prefix=/usr/local/Cellar/hdf5/$HDF5 --enable-production --enable-debug=no --disable-dependency-tracking --with-zlib=/usr --with-szlib=/usr/local/opt/szip --enable-static=yes --enable-shared=yes --enable-cxx --disable-fortran CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++ CFLAGS="$MACOS_SDK" CPPFLAGS="$MACOS_SDK" LDFLAGS="$MACOS_SDK";
+  - make >/dev/null || make
+  - make install >hdf5.log
+  - popd
+# Build Boost
+  - brew unlink boost
+  - if [ ! -d boost-$BOOSTVER ]; then
+      brew unpack --patch --destdir=. boost;
+    fi
+  - pushd boost-$BOOSTVER;
+  - echo "Bootstrap boost..."
+  - ./bootstrap.sh --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib --without-icu --without-libraries=python,mpi > boost_bootstrap.log
+  - ./bootstrap.sh --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib --without-icu --without-libraries=python,mpi;
+  - {
+    echo "using darwin : : /usr/local/llvm39/bin/clang++"
+    echo "             : <cxxflags>$MACOS_SDK <linkflags>$MACOS_SDK <compileflags>$MACOS_SDK ;"
+    echo "using python : 3.5"
+    echo "             : /usr/local/bin/python3.5"
+    echo "             : /usr/local/Cellar/python3/$PYTHONVER/include/python3.5m ;"
+    } > user-config.jam;
+  - echo "boost headers..."
+  - ./b2 headers
+  - echo "Building boost..."
+  - ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static > boost.log;
+  - popd
+  - brew link --overwrite boost
+# Build Boost-Python
   - popd
 # Make bottles
   - mkdir bottles && pushd bottles
   - brew bottle valgrind
   - brew bottle python3
+  - brew bottle hdf5
   - popd
 
 before_deploy:
