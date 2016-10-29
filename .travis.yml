@@ -37,7 +37,7 @@ install:
   - brew install valgrind --build-bottle
   - brew install python3 --build-bottle
   - brew unlink boost
-  - brew install boost --build-bottle
+  - travis_wait 25 brew install boost --build-bottle
   - brew tap homebrew/science
   - brew install hdf5
 
@@ -106,7 +106,7 @@ script:
   - echo 'boost headers...'
   - ./b2 headers
   - echo "Building boost..."
-  - ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static > boost.log;
+  - travis_wait 25 ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static > boost.log;
   - popd
   - brew link --overwrite boost
 # Build Boost-Python
