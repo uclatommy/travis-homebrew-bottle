@@ -37,7 +37,7 @@ install:
   - brew install --build-bottle valgrind
   - brew install --build-bottle python3
   - brew unlink boost
-  - brew install --verbose --build-bottle boost
+  - travis_wait 40 brew install --build-bottle boost
   - brew tap homebrew/science
   - brew install hdf5
 
