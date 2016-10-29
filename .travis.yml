@@ -57,7 +57,7 @@ script:
   - ./autogen.sh
   - ./configure --disable-dependency-tracking --prefix=/usr/local/Cellar/valgrind/$VALGRIND --enable-only64bit --build=amd64-darwin CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++
   - make >/dev/null || make
-  - make install
+  - make install > valgrind.log
   - brew link --overwrite valgrind
   - popd;
 # Build python3
@@ -74,7 +74,7 @@ script:
   - CFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK";
   - MACOSX_DEPLOYMENT_TARGET=$OSXVER;
   - make >/dev/null || make;
-  - make install PYTHONAPPSDIR=/usr/local/Cellar/python3/$PYTHONVER;
+  - make install PYTHONAPPSDIR=/usr/local/Cellar/python3/$PYTHONVER > python3.log;
   - popd
   - brew link --overwrite python3
 # Build hdf5
