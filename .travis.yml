@@ -29,6 +29,7 @@ install:
       mkdir downloads ;
     fi;
   - pushd downloads
+  - ls -l
   - if [ ! -f clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
     fi;
