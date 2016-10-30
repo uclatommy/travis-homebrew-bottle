@@ -22,6 +22,20 @@ branches:
 
 before_install:
   - brew update
+  - OSXVER=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      if [ $OSXVER == 10.10 ] ; then
+        wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/hdf5-1.8.17.yosemite.bottle.tar.gz';
+        wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/python3-3.5.2_3.yosemite.bottle.1.tar.gz';
+        wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/valgrind-3.12.0.yosemite.bottle.1.tar.gz';
+        brew install *.yosemite.bottle*tar.gz;
+      elif [ $OSXVER == 10.11 ] ; then
+        wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/hdf5-1.8.17.el_capitan.bottle.tar.gz';
+        wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/python3-3.5.2_3.el_capitan.bottle.1.tar.gz';
+        wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/valgrind-3.12.0.el_capitan.bottle.1.tar.gz';
+        brew install *.el_capitan.bottle*tar.gz;
+      fi
+    fi
 
 install:
   - if [ ! -d downloads ] ; then
@@ -43,17 +57,21 @@ install:
   - chmod 744 /usr/local/llvm39;
   - export CC=/usr/local/llvm39/bin/clang
   - export CXX=/usr/local/llvm39/bin/clang++
-  - brew install openssl || brew upgrade openssl
-  - brew install cmake || brew upgrade cmake
-  - brew install sqlite || brew upgrade sqlite
-  - brew install xz || brew upgrade xz
-  - brew install --build-bottle valgrind
-  - brew install --build-bottle python3
   - brew unlink boost
-#  - travis_wait 40 brew install --build-bottle boost
-#  - brew install --with-python3 --build-bottle boost-python
-  - brew tap homebrew/science
-  - brew install hdf5
+  - if [ ! -f boost-1.62.0.*.bottle*tar.gz ]; then
+      travis_wait 30 brew install --build-bottle boost;
+      brew install --build-bottle boost-python;
+      brew bottle boost;
+      brew bottle boost-python;
+    else
+      if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        if [ $OSXVER == 10.10 ] ; then
+          brew install *.yosemite.bottle*tar.gz;
+        elif [ $OSXVER == 10.11 ] ; then
+          brew install *.el_capitan.bottle*tar.gz;
+        fi
+      fi
+    fi
   - popd;
 
 script:
@@ -64,56 +82,15 @@ script:
   - HDF5=1.8.17
   - MACOS_SDK="-mmacosx-version-min=$OSXVER";
   - pushd downloads
-# Build valgrind
-  - brew unlink valgrind
-  - if [ ! -d valgrind-$VALGRIND ] ; then
-      brew unpack --patch --destdir=. valgrind ;
-    fi;
-  - pushd valgrind-$VALGRIND
-  - ./autogen.sh
-  - ./configure --disable-dependency-tracking --prefix=/usr/local/Cellar/valgrind/$VALGRIND --enable-only64bit --build=amd64-darwin CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++
-  - make >/dev/null || make
-  - make install > valgrind.log
-  - brew link --overwrite valgrind
-  - popd;
-# Build python3
-  - brew unlink python3
-  - if [ ! -d python3-$PYTHONVER ] ; then
-      brew unpack --patch --destdir=. python3;
-    fi;
-  - pushd python3-$PYTHONVER;
-  - ./configure --prefix=/usr/local/Cellar/python3/$PYTHONVER --enable-ipv6 --datarootdir=/usr/local/Cellar/python3/$PYTHONVER/share --datadir=/usr/local/Cellar/python3/$PYTHONVER/share --enable-shared --with-ensurepip --without-gcc --with-valgrind CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++ LDFLAGS="$MACOS_SDK -L/usr/local/opt/openssl/lib" CPPFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK" CFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK";
-  - CC=/usr/local/llvm39/bin/clang;
-  - CXX=/usr/local/llvm39/bin/clang++;
-  - LDFLAGS="$MACOS_SDK -L/usr/local/opt/openssl/lib";
-  - CPPFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK" ;
-  - CFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK";
-  - MACOSX_DEPLOYMENT_TARGET=$OSXVER;
-  - make >/dev/null || make;
-  - make install PYTHONAPPSDIR=/usr/local/Cellar/python3/$PYTHONVER > python3.log;
-  - popd
-  - brew link --overwrite python3
-# Build hdf5
-  - brew unlink hdf5
-  - if [ ! -d hdf5-$HDF5 ] ; then
-      brew unpack --patch --destdir=. hdf5;
-    fi
-  - pushd hdf5-$HDF5
-  - ./configure --prefix=/usr/local/Cellar/hdf5/$HDF5 --enable-production --enable-debug=no --disable-dependency-tracking --with-zlib=/usr --with-szlib=/usr/local/opt/szip --enable-static=yes --enable-shared=yes --enable-cxx --disable-fortran CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++ CFLAGS="$MACOS_SDK" CPPFLAGS="$MACOS_SDK" LDFLAGS="$MACOS_SDK";
-  - make >/dev/null || make
-  - make install >hdf5.log
-  - popd
 # Build Boost
-#  - travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER
+  - travis_wait 30 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER
 # Build Boost-Python
-#  - ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER
+  - ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER
 # Make bottles
   - popd
   - mkdir bottles-osx$OSXVER && pushd bottles-osx$OSXVER
-  - brew bottle valgrind
-  - brew bottle python3
-  - brew bottle hdf5
-#  - brew bottle boost
+  - brew bottle boost
+  - brew bottle boost-python
   - popd
 
 before_deploy:
