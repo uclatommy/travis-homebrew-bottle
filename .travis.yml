@@ -33,9 +33,9 @@ install:
   - if [ ! -f clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
     fi;
-  - if [ ! -d /usr/local/llvm39 ] ; then
+  - if [ ! -d clang+llvm-3.9.0-x86_64-apple-darwin ] ; then
       tar -xf clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
-      mv clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
+      cp clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
       chmod 744 /usr/local/llvm39;
     fi
   - export CC=/usr/local/llvm39/bin/clang
