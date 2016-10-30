@@ -106,7 +106,7 @@ script:
 #  - ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER
 # Make bottles
   - popd
-  - mkdir bottles-osx$OSXVER && pushd bottles
+  - mkdir bottles-osx$OSXVER && pushd bottles-osx$OSXVER
   - brew bottle valgrind
   - brew bottle python3
   - brew bottle hdf5
