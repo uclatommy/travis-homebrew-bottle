@@ -47,8 +47,8 @@ install:
   - brew install --build-bottle valgrind
   - brew install --build-bottle python3
   - brew unlink boost
-  - travis_wait 40 brew install --build-bottle boost
-  - brew install --with-python3 --build-bottle boost-python
+#  - travis_wait 40 brew install --build-bottle boost
+#  - brew install --with-python3 --build-bottle boost-python
   - brew tap homebrew/science
   - brew install hdf5
   - popd;
@@ -101,16 +101,16 @@ script:
   - make install >hdf5.log
   - popd
 # Build Boost
-  - travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER
+#  - travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER
 # Build Boost-Python
-  - ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER
+#  - ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER
 # Make bottles
   - popd
   - mkdir bottles-osx$OSXVER && pushd bottles
   - brew bottle valgrind
   - brew bottle python3
   - brew bottle hdf5
-  - brew bottle boost
+#  - brew bottle boost
   - popd
 
 before_deploy:
