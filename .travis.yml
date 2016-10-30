@@ -55,7 +55,7 @@ install:
 script:
   - BOOSTVER=1.62.0
   - PYTHONVER=3.5.2
-  - OSXVER=10.11
+  - OSXVER=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
   - VALGRIND=3.12.0
   - HDF5=1.8.17
   - MACOS_SDK="-mmacosx-version-min=$OSXVER";
