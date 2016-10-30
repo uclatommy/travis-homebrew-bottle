@@ -1,13 +1,19 @@
 sudo: false
 
-language: cpp
+matrix:
+  fast_finish: true
+  include:
+    - language: cpp
+      os: osx
+      osx_image: xcode8
+    - language: cpp
+      os: osx
+      osx_image: xcode7
 
 cache:
-  directories:
-    - downloads
-
-os:
-  - osx
+directories:
+- downloads
+- /usr/local/llvm39
 
 # Only build the master branch, otherwise once the release is added, Github
 # creates a tag which triggers another identical build.
@@ -26,10 +32,13 @@ install:
   - if [ ! -f clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
     fi;
-  - tar -xf clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
-  - mv clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
-  - chmod 744 /usr/local/llvm39;
-  - popd;
+  - if [ ! -d /usr/local/llvm39 ] ; then
+      tar -xf clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz;
+      mv clang+llvm-3.9.0-x86_64-apple-darwin /usr/local/llvm39;
+      chmod 744 /usr/local/llvm39;
+    fi
+  - export CC=/usr/local/llvm39/bin/clang
+  - export CXX=/usr/local/llvm39/bin/clang++
   - brew install openssl
   - brew install cmake
   - brew install sqlite
@@ -41,6 +50,7 @@ install:
   - brew install --with-python3 --build-bottle boost-python
   - brew tap homebrew/science
   - brew install hdf5
+  - popd;
 
 script:
   - BOOSTVER=1.62.0
@@ -90,9 +100,9 @@ script:
   - make install >hdf5.log
   - popd
 # Build Boost
-  - travis_wait 40 ./build-boost.sh $OSXVER $PYTHONVER $BOOSTVER
+  - travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER
 # Build Boost-Python
-  - ./build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER
+  - ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER
 # Make bottles
   - popd
   - mkdir bottles-osx$OSXVER && pushd bottles
