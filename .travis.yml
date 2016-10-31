@@ -64,7 +64,7 @@ script:
   - BUILD_BOOST_PYTHON=true
   - if [ $OSXVER = 10.10 ] ; then
       OSX_NAME=yosemite ;
-    elif [ $OSXVER = 10.11 ]
+    elif [ $OSXVER = 10.11 ] ; then
       OSX_NAME=el_capitan ;
     fi
   - pushd downloads && ls
