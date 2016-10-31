@@ -68,15 +68,17 @@ script:
       OSX_NAME=el_capitan ;
     fi
   - pushd downloads && ls
+  - brew tap homebrew/science;
 # Build/Install hdf5
   - if [ -f hdf5-$HDF5.$OSX_NAME.bottle.tar.gz ] ; then
+      echo 'Installing hdf5 from cache...';
       BUILD_HDF5=false;
       brew install hdf5-$HDF5.$OSX_NAME.bottle.tar.gz;
     else
       BUILD_HDF5=true;
     fi
   - if [ "$BUILD_HDF5" = true ] ; then
-      brew tap homebrew/science;
+      echo 'Installing hdf5 from homebrew...';
       brew install hdf5;
       brew unlink hdf5;
       if [ ! -d hdf5-$HDF5 ] ; then
