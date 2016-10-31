@@ -144,7 +144,7 @@ script:
       brew bottle python3;
     fi;
 # Build/Install boost
-  - if [ -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
+  - travis_wait 40 if [ -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost from cache...';
       brew install boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
     elif [ -f $(ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
@@ -161,13 +161,13 @@ script:
       brew bottle boost;
       popd;
     fi;
-  - if [ "$BUILD_BOOST" = true ]; then
+  - travis_wait 40 if [ "$BUILD_BOOST" = true ]; then
       echo 'Building boost...';
       ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost;
     fi;
 # Build/Install boost-python
-  - if [ ! -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
+  - travis_wait 40 if [ ! -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Not ready to build boost-python';
     elif [ -f $(ls boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost-python from cache...';
@@ -186,7 +186,7 @@ script:
       brew bottle boost-python;
       popd;
     fi;
-  - if [ "$BUILD_BOOST_PYTHON" = true ]; then
+  - travis_wait 40 if [ "$BUILD_BOOST_PYTHON" = true ]; then
       echo 'Building boost-python...';
       ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost-python;
