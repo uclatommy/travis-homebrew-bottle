@@ -70,10 +70,10 @@ script:
   - pushd downloads && ls
 # Build/Install hdf5
   - if [ -f hdf5-$HDF5.$OSX_NAME.bottle*tar.gz'] ; then
-      BUILD_HDF5=false
+      BUILD_HDF5=false;
       brew install hdf5-$HDF5.$OSX_NAME.bottle.tar.gz;
     else
-      BUILD_HDF5=true
+      BUILD_HDF5=true;
     fi
   - if [ "$BUILD_HDF5" = true ] ; then
       brew install hdf5;
