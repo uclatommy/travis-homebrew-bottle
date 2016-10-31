@@ -93,7 +93,6 @@ script:
   - popd
   - mkdir bottles-osx$OSXVER
   - cp downloads/*.$OSX_NAME.bottle*tar.gz bottles-osx$OSXVER
-  - popd
 
 before_deploy:
   - export RELEASE_FILES=$(ls bottles-osx$OSXVER)
