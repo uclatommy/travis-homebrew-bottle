@@ -92,10 +92,10 @@ script:
       brew bottle hdf5;
     fi
 # Build/Install valgrind
-  - if [ -f valgrind-$VALGRIND.$OSX_NAME.bottle.1.tar.gz ] ; then
+  - if [ -f $(ls valgrind-$VALGRIND.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing valgrind from cache...';
       BUILD_VALGRIND=false;
-      brew install valgrind-$VALGRIND.$OSX_NAME.bottle.tar.gz;
+      brew install valgrind-$VALGRIND.$OSX_NAME.bottle*tar.gz;
     else
       BUILD_VALGRIND=true;
     fi
@@ -116,9 +116,9 @@ script:
       brew bottle valgrind;
     fi;
 # Build/Install python3
-  - if [ -f python3-$PYTHONVER.$OSX_NAME.bottle.1.tar.gz ] ; then
+  - if [ -f $(ls python3-$PYTHONVER*$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing python3 from cache...';
-      brew install python3-$PYTHONVER.$OSX_NAME.bottle.tar.gz;
+      brew install python3-$PYTHONVER*$OSX_NAME.bottle*tar.gz;
     else
       BUILD_PYTHON=true;
     fi;
@@ -144,12 +144,12 @@ script:
       brew bottle python3;
     fi;
 # Build/Install boost
-  - if [ -f boost-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz ] ; then
+  - if [ -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost from cache...';
-      brew install boost-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz;
-    elif [ -f temp/boost-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz ] ; then
+      brew install boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
+    elif [ -f $(ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost from cached homebrew version...';
-      brew install temp/boost-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz;
+      brew install temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
       BUILD_BOOST=true;
     else
       echo 'Building homebrew bottle...';
@@ -167,14 +167,14 @@ script:
       brew bottle boost;
     fi;
 # Build/Install boost-python
-  - if [ ! -f boost-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz ] ; then
+  - if [ ! -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Not ready to build boost-python';
-    elif [ -f boost-python-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz ] ; then
+    elif [ -f $(ls boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost-python from cache...';
-      brew install boost-python-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz;
-    elif [ -f temp/boost-python-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz ] ; then
+      brew install boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
+    elif [ -f $(ls temp/boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost-python from cached homebrew version...';
-      brew install temp/boost-python-$BOOSTVER.$OSX_NAME.bottle.1.tar.gz;
+      brew install temp/boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
       BUILD_BOOST_PYTHON=true;
     else
       echo 'Building homebrew bottle...';
