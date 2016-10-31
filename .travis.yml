@@ -76,6 +76,7 @@ script:
       BUILD_HDF5=true;
     fi
   - if [ "$BUILD_HDF5" = true ] ; then
+      brew tap homebrew/science
       brew install hdf5;
       brew unlink hdf5;
       if [ ! -d hdf5-$HDF5 ] ; then
