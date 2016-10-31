@@ -144,7 +144,7 @@ script:
       brew bottle python3;
     fi;
 # Build/Install boost
-  - travis_wait 40 $(if [ -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
+  - if [ -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost from cache...';
       brew install boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
     elif [ -f $(ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
@@ -153,21 +153,21 @@ script:
       BUILD_BOOST=true;
     else
       echo 'Building homebrew bottle...';
-      brew install --build-bottle boost;
+      travis_wait 40 brew install --build-bottle boost;
       if [ ! -d temp ]; then
         mkdir temp;
       fi;
       pushd temp;
       brew bottle boost;
       popd;
-    fi;)
-  - travis_wait 40 $(if [ "$BUILD_BOOST" = true ]; then
+    fi;
+  - if [ "$BUILD_BOOST" = true ]; then
       echo 'Building boost...';
-      ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
+      travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost;
-    fi;)
+    fi;
 # Build/Install boost-python
-  - travis_wait 40 $(if [ ! -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
+  - if [ ! -f $(ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Not ready to build boost-python';
     elif [ -f $(ls boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz) ] ; then
       echo 'Installing boost-python from cache...';
@@ -178,19 +178,19 @@ script:
       BUILD_BOOST_PYTHON=true;
     else
       echo 'Building homebrew bottle...';
-      brew install --build-bottle boost-python;
+      travis_wait 40 brew install --build-bottle boost-python;
       if [ ! -d temp ]; then
         mkdir temp;
       fi;
       pushd temp;
       brew bottle boost-python;
       popd;
-    fi;)
-  - travis_wait 40 $(if [ "$BUILD_BOOST_PYTHON" = true ]; then
+    fi;
+  - if [ "$BUILD_BOOST_PYTHON" = true ]; then
       echo 'Building boost-python...';
-      ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER;
+      travis_wait 40 ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost-python;
-    fi;)
+    fi;
 # Make bottles
   - popd
   - mkdir bottles-osx$OSXVER
