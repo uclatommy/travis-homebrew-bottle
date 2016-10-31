@@ -118,6 +118,7 @@ script:
 # Build/Install python3
   - if ls python3-$PYTHONVER*$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Installing python3 from cache...';
+      BUILD_PYTHON=false;
       brew install python3-$PYTHONVER*$OSX_NAME.bottle*tar.gz;
     else
       BUILD_PYTHON=true;
@@ -146,6 +147,7 @@ script:
 # Build/Install boost
   - if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Installing boost from cache...';
+      BUILD_BOOST=false;
       brew unlink boost && brew install boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
     elif ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Installing boost from cached homebrew version...';
@@ -153,6 +155,7 @@ script:
       BUILD_BOOST=true;
     else
       echo 'Building homebrew bottle...';
+      BUILD_BOOST=false;
       travis_wait 40 brew unlink boost && brew install --build-bottle boost;
       if [ ! -d temp ]; then
         mkdir temp;
@@ -169,8 +172,10 @@ script:
 # Build/Install boost-python
   - if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Not ready to build boost-python';
+      BUILD_BOOST_PYTHON=false;
     elif ls boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1> /dev/null 2>&1; then
       echo 'Installing boost-python from cache...';
+      BUILD_BOOST_PYTHON=false;
       brew install boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
     elif ls temp/boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Installing boost-python from cached homebrew version...';
@@ -178,6 +183,7 @@ script:
       BUILD_BOOST_PYTHON=true;
     else
       echo 'Building homebrew bottle...';
+      BUILD_BOOST_PYTHON=true;
       travis_wait 40 brew install --build-bottle boost-python;
       if [ ! -d temp ]; then
         mkdir temp;
