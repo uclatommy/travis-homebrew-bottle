@@ -145,7 +145,7 @@ script:
       brew bottle python3;
     fi;
 # Build/Install boost
-  - travis_wait 40 (if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
+  - travis_wait 40 ${if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Installing boost from cache...';
       BUILD_BOOST=false;
       brew unlink boost && brew install boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
@@ -163,12 +163,12 @@ script:
       pushd temp;
       brew bottle boost;
       popd;
-    fi;)
-  - travis_wait 40 (if [ "$BUILD_BOOST" = true ]; then
+    fi;}
+  - travis_wait 40 ${if [ "$BUILD_BOOST" = true ]; then
       echo 'Building boost...';
       ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost;
-    fi;)
+    fi;}
 # Build/Install boost-python
   - if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Not ready to build boost-python';
