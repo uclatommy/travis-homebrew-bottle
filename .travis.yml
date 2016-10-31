@@ -63,9 +63,9 @@ script:
   - BUILD_BOOST=true
   - BUILD_BOOST_PYTHON=true
   - if [ $OSXVER = 10.10 ] ; then
-      OSX_NAME = yosemite ;
+      OSX_NAME=yosemite ;
     elif [ $OSXVER = 10.11 ]
-      OSX_NAME = el_capitan ;
+      OSX_NAME=el_capitan ;
     fi
   - pushd downloads && ls
 # Build/Install hdf5
