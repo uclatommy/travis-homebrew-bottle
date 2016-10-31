@@ -21,7 +21,7 @@ pushd boost-$BOOSTVER;
 echo "Bootstrap boost..."
 ./bootstrap.sh --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib --without-icu --without-libraries=python,mpi > boost_bootstrap.log
 {
-echo "using darwin : : /usr/local/llvm39/bin/clang++"
+echo "using darwin : : /usr/local/llvm/bin/clang++"
 echo "             : <cxxflags>$MACOS_SDK <linkflags>$MACOS_SDK <compileflags>$MACOS_SDK ;"
 echo "using python : 3.5"
 echo "             : /usr/local/bin/python3.5"

@@ -21,7 +21,7 @@ pushd boost-python-$BOOSTVER
 echo "Bootstrapping boost-python..."
 ./bootstrap.sh --prefix=/usr/local/Cellar/boost-python/$BOOSTVER --libdir=/usr/local/Cellar/boost-python/$BOOSTVER/lib --with-libraries=python --with-python=python3 --with-python-root=/usr/local/Cellar/python3/$PYTHONVER;
 {
-echo "using darwin : : /usr/local/llvm39/bin/clang++"
+echo "using darwin : : /usr/local/llvm/bin/clang++"
 echo "             : <cxxflags>$MACOS_SDK <linkflags>$MACOS_SDK <compileflags>$MACOS_SDK ;"
 echo "using python : 3.5"
 echo "             : /usr/local/bin/python3.5"
