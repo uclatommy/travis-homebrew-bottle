@@ -144,7 +144,7 @@ script:
       brew bottle python3;
     fi;
 # Build/Install boost
-  - if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
+  - travis_wait 40 $(if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Installing boost from cache...';
       brew unlink boost && brew install boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
     elif ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
@@ -153,21 +153,21 @@ script:
       BUILD_BOOST=true;
     else
       echo 'Building homebrew bottle...';
-      travis_wait 40 brew unlink boost && brew install --build-bottle boost;
+      brew unlink boost && brew install --build-bottle boost;
       if [ ! -d temp ]; then
         mkdir temp;
       fi;
       pushd temp;
       brew bottle boost;
       popd;
-    fi;
-  - if [ "$BUILD_BOOST" = true ]; then
+    fi;)
+  - travis_wait 40 $(if [ "$BUILD_BOOST" = true ]; then
       echo 'Building boost...';
-      travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
+      ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost;
-    fi;
+    fi;)
 # Build/Install boost-python
-  - if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
+  - travis_wait 40 $(if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Not ready to build boost-python';
     elif ls boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1> /dev/null 2>&1; then
       echo 'Installing boost-python from cache...';
@@ -178,19 +178,19 @@ script:
       BUILD_BOOST_PYTHON=true;
     else
       echo 'Building homebrew bottle...';
-      travis_wait 40 brew install --build-bottle boost-python;
+      brew install --build-bottle boost-python;
       if [ ! -d temp ]; then
         mkdir temp;
       fi;
       pushd temp;
       brew bottle boost-python;
       popd;
-    fi;
-  - if [ "$BUILD_BOOST_PYTHON" = true ]; then
+    fi;)
+  - travis_wait 40 $(if [ "$BUILD_BOOST_PYTHON" = true ]; then
       echo 'Building boost-python...';
-      travis_wait 40 ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER;
+      ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost-python;
-    fi;
+    fi;)
 # Make bottles
   - popd
   - mkdir bottles-osx$OSXVER
