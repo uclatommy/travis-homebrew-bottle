@@ -67,10 +67,10 @@ script:
     elif [ $OSXVER = 10.11 ]
       OSX_NAME = el_capitan ;
     fi
-  - pushd downloads
-
+  - pushd downloads && ls
 # Build/Install hdf5
-  - if [ wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/hdf5-$HDF5.$OSX_NAME.bottle*tar.gz'] ; then
+  - if [ -f hdf5-$HDF5.$OSX_NAME.bottle*tar.gz'] ; then
+      BUILD_HDF5=false
       brew install hdf5-$HDF5.$OSX_NAME.bottle.tar.gz;
     else
       BUILD_HDF5=true
@@ -85,15 +85,13 @@ script:
       ./configure --prefix=/usr/local/Cellar/hdf5/$HDF5 --enable-production --enable-debug=no --disable-dependency-tracking --with-zlib=/usr --with-szlib=/usr/local/opt/szip --enable-static=yes --enable-shared=yes --enable-cxx --disable-fortran CC=/usr/local/llvm/bin/clang CXX=/usr/local/llvm/bin/clang++ CFLAGS="$MACOS_SDK" CPPFLAGS="$MACOS_SDK" LDFLAGS="$MACOS_SDK";
       make >/dev/null || make;
       make install >hdf5.log;
-      brew bottle hdf5;
       popd;
+      brew bottle hdf5;
     fi
 # Make bottles
   - popd
-  - mkdir bottles-osx$OSXVER && pushd bottles-osx$OSXVER
-  - if [ "$BUILD_HDF5" = true ]; then
-      cp ../downloads/*.$OSX_NAME.bottle*tar.gz .
-    fi
+  - mkdir bottles-osx$OSXVER
+  - cp downloads/*.$OSX_NAME.bottle*tar.gz bottles-osx$OSXVER
   - popd
 
 before_deploy:
