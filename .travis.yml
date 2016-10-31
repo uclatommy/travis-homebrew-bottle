@@ -24,7 +24,7 @@ before_install:
   - brew update
 
 install:
-  - LLVMVER = 3.9.0
+  - LLVMVER=3.9.0
   - if [ ! -d downloads ] ; then
       mkdir downloads ;
     fi;
@@ -57,23 +57,23 @@ script:
   - VALGRIND=3.12.0
   - HDF5=1.8.17
   - MACOS_SDK="-mmacosx-version-min=$OSXVER";
-  - BUILD_VALGRIND = true
-  - BUILD_PYTHON = true
-  - BUILD_HDF5 = true
-  - BUILD_BOOST = true
-  - BUILD_BOOST_PYTHON = true
+  - BUILD_VALGRIND=true
+  - BUILD_PYTHON=true
+  - BUILD_HDF5=true
+  - BUILD_BOOST=true
+  - BUILD_BOOST_PYTHON=true
   - if [ $OSXVER = 10.10 ] ; then
       OSX_NAME = yosemite ;
     elif [ $OSXVER = 10.11 ]
       OSX_NAME = el_capitan ;
     fi
   - pushd downloads
-  
+
 # Build/Install hdf5
   - if [ wget 'https://github.com/uclatommy/travis-homebrew-bottle/releases/download/quantum-dev/hdf5-$HDF5.$OSX_NAME.bottle*tar.gz'] ; then
       brew install hdf5-$HDF5.$OSX_NAME.bottle.tar.gz;
     else
-      BUILD_HDF5 = true
+      BUILD_HDF5=true
     fi
   - if [ "$BUILD_HDF5" = true ] ; then
       brew install hdf5;
