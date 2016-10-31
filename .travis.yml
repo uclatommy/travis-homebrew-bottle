@@ -91,6 +91,58 @@ script:
       popd;
       brew bottle hdf5;
     fi
+# Build/Install valgrind
+  - if [ -f valgrind-$VALGRIND.$OSX_NAME.bottle.tar.gz ] ; then
+      echo 'Installing valgrind from cache...';
+      BUILD_VALGRIND=false;
+      brew install valgrind-$VALGRIND.$OSX_NAME.bottle.tar.gz;
+    else
+      BUILD_VALGRIND=true;
+    fi
+  - if [ "$BUILD_VALGRIND" = true ] ; then
+      echo 'Installing valgrind from homebrew...';
+      brew install --build-bottle valgrind;
+      brew unlink valgrind;
+      if [ ! -d valgrind-$VALGRIND ] ; then
+        brew unpack --patch --destdir=. valgrind ;
+      fi;
+      pushd valgrind-$VALGRIND;
+      ./autogen.sh;
+      ./configure --disable-dependency-tracking --prefix=/usr/local/Cellar/valgrind/$VALGRIND --enable-only64bit --build=amd64-darwin CC=/usr/local/llvm/bin/clang CXX=/usr/local/llvm/bin/clang++;
+      make >/dev/null || make;
+      make install > valgrind.log;
+      brew link --overwrite valgrind;
+      popd;
+      brew bottle valgrind;
+    fi;
+# Build/Install python3
+  - if [ -f python3-$PYTHONVER.$OSX_NAME.bottle.tar.gz ] ; then
+      echo 'Installing python3 from cache...';
+      brew install python3-$PYTHONVER.$OSX_NAME.bottle.tar.gz;
+    else
+      BUILD_PYTHON=true;
+    fi;
+  - if [ "$BUILD_PYTHON" = true ] ; then
+      echo 'Installing python3 from homebrew...';
+      brew install --build-bottle python3;
+      brew unlink python3;
+      if [ ! -d python3-$PYTHONVER ] ; then
+        brew unpack --patch --destdir=. python3;
+      fi;
+      pushd python3-$PYTHONVER;
+      ./configure --prefix=/usr/local/Cellar/python3/$PYTHONVER --enable-ipv6 --datarootdir=/usr/local/Cellar/python3/$PYTHONVER/share --datadir=/usr/local/Cellar/python3/$PYTHONVER/share --enable-shared --with-ensurepip --without-gcc --with-valgrind CC=/usr/local/llvm39/bin/clang CXX=/usr/local/llvm39/bin/clang++ LDFLAGS="$MACOS_SDK -L/usr/local/opt/openssl/lib" CPPFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK" CFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK";
+      CC=/usr/local/llvm39/bin/clang;
+      CXX=/usr/local/llvm39/bin/clang++;
+      LDFLAGS="$MACOS_SDK -L/usr/local/opt/openssl/lib";
+      CPPFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK" ;
+      CFLAGS="-pipe -w -Os -march=native -isystem/usr/local/include -isystem/usr/include/libxml2 -isystem/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers -I/usr/local/opt/readline/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include $MACOS_SDK";
+      MACOSX_DEPLOYMENT_TARGET=$OSXVER;
+      make >/dev/null || make;
+      make install PYTHONAPPSDIR=/usr/local/Cellar/python3/$PYTHONVER > python3.log;
+      popd;
+      brew link --overwrite python3;
+      brew bottle python3
+    fi;
 # Make bottles
   - popd
   - mkdir bottles-osx$OSXVER
