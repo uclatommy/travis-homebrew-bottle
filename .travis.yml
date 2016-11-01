@@ -145,7 +145,7 @@ script:
       brew bottle python3;
     fi;
 # Build/Install boost
-  - chmod 744 ./..build-boost.sh
+  - chmod 744 ../build-boost.sh
   - travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
 # Build/Install boost-python
   - if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
@@ -172,7 +172,7 @@ script:
     fi;
   - if [ "$BUILD_BOOST_PYTHON" = true ]; then
       echo 'Building boost-python...';
-      chmod 744 ./../build-boost-python.sh
+      chmod 744 ../build-boost-python.sh
       ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER;
       brew bottle boost-python;
     fi;
