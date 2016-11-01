@@ -146,7 +146,7 @@ script:
     fi;
 # Build/Install boost
   - chmod 744 ../build-boost.sh
-  - travis_wait 40 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
+  - travis_wait 50 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
 # Build/Install boost-python
   - if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Not ready to build boost-python';
