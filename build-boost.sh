@@ -24,7 +24,8 @@ if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
     brew unlink boost && brew install boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
 elif ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
     echo 'Installing boost from cached homebrew version...';
-    brew unlink boost && brew install temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
+    time brew unlink boost;
+    time brew install temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
     BUILD_BOOST=true;
 else
     echo 'Building homebrew bottle...';
@@ -40,13 +41,13 @@ else
 fi;
 if [ "$BUILD_BOOST" = true ]; then
     echo 'Building boost...';
-    brew unlink boost
+    time brew unlink boost
     if [ ! -d boost-$BOOSTVER ]; then
-        brew unpack --patch --destdir=. boost;
+        time brew unpack --patch --destdir=. boost;
     fi
     pushd boost-$BOOSTVER;
     echo "Bootstrap boost..."
-    ./bootstrap.sh --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib --without-icu --without-libraries=python,mpi > boost_bootstrap.log
+    time ./bootstrap.sh --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib --without-icu --without-libraries=python,mpi > boost_bootstrap.log
     {
     echo "using darwin : : /usr/local/llvm/bin/clang++"
     echo "             : <cxxflags>$MACOS_SDK <linkflags>$MACOS_SDK <compileflags>$MACOS_SDK ;"
@@ -55,10 +56,10 @@ if [ "$BUILD_BOOST" = true ]; then
     echo "             : /usr/local/Cellar/python3/$PYTHONVER/include/python3.5m ;"
     } > user-config.jam;
     echo 'boost headers...'
-    ./b2 headers
+    time ./b2 headers
     echo "Building boost..."
-    ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static > boost.log;
-    popd
+    time ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static;
+    popd;
     brew link --overwrite boost
     brew bottle boost;
 fi;
