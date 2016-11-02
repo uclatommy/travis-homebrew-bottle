@@ -33,7 +33,10 @@ install:
       mkdir downloads ;
     fi;
   - pushd downloads
-  - ls -l && ls -l temp
+  - ls -l
+  - if [ -d temp ]; then
+      ls -l temp;
+    fi;
   - if [ ! -f clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/$LLVMVER/clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
     fi;
