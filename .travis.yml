@@ -8,7 +8,7 @@ matrix:
       osx_image: xcode8
     - language: cpp
       os: osx
-      osx_image: xcode7
+      osx_image: xcode7.1
 
 cache:
   directories:
@@ -148,11 +148,11 @@ script:
     fi;
 # Build/Install boost
   - chmod 744 ../build-boost.sh
-  - if [ -f boost-1.62.0.tar.bz2 ]; then
-      cp boost-1.62.0.tar.bz2 /Users/travis/Library/Caches/Homebrew;
+  - if [ -f boost-$BOOSTVER.tar.bz2 ]; then
+      cp boost-$BOOSTVER.tar.bz2 /Users/travis/Library/Caches/Homebrew;
     fi;
   - travis_wait 45 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
-  - cp /Users/travis/Library/Caches/Homebrew/boost-1.62.0.tar.bz2 .
+  - cp /Users/travis/Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 .
 # Build/Install boost-python
   - if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       echo 'Not ready to build boost-python';
