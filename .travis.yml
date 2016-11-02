@@ -10,7 +10,11 @@ matrix:
       os: osx
       osx_image: xcode7.1
 
+before_cache:
+  - rm -f $HOME/downloads/travis_log*.log
+
 cache:
+  timeout: 1000
   directories:
   - downloads
 
@@ -91,6 +95,7 @@ script:
       make install >hdf5.log;
       popd;
       brew bottle hdf5;
+      rm -r hdf5-$HDF5;
     fi
 # Build/Install valgrind
   - if ls valgrind-$VALGRIND.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
@@ -115,6 +120,7 @@ script:
       brew link --overwrite valgrind;
       popd;
       brew bottle valgrind;
+      rm -rf valgrind-$VALGRIND;
     fi;
 # Build/Install python3
   - if ls python3-$PYTHONVER*$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
@@ -144,6 +150,7 @@ script:
       popd;
       brew link --overwrite python3;
       brew bottle python3;
+      rm -rf python3-$PYTHONVER;
     fi;
 # Build/Install boost
   - chmod 744 ../build-boost.sh
