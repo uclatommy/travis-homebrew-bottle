@@ -13,7 +13,6 @@ matrix:
 cache:
   directories:
   - downloads
-  - /Users/travis/Library/Caches/Homebrew
 
 # Only build the master branch, otherwise once the release is added, Github
 # creates a tag which triggers another identical build.
