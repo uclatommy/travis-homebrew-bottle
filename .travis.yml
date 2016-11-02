@@ -11,7 +11,7 @@ matrix:
       osx_image: xcode7.1
 
 before_cache:
-  - rm -f $HOME/downloads/travis_log*.log
+  - rm -f $HOME/downloads/travis_wait*.log
 
 cache:
   timeout: 1000
@@ -33,7 +33,6 @@ install:
       mkdir downloads ;
     fi;
   - pushd downloads
-  - rm travis_wait*
   - ls -l && ls -l temp
   - if [ ! -f clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/$LLVMVER/clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
