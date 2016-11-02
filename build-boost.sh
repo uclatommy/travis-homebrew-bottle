@@ -44,6 +44,7 @@ if [ "$BUILD_BOOST" = true ]; then
     time brew unlink boost
     if [ ! -d boost-$BOOSTVER ]; then
         time brew unpack --patch --destdir=. boost;
+        ls -l
     else
         pushd boost-$BOOSTVER;
         echo "Bootstrap boost..."
