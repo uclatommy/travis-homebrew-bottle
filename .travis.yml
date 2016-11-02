@@ -13,6 +13,7 @@ matrix:
 cache:
   directories:
   - downloads
+  - /Users/travis/Library/Caches/Homebrew
 
 # Only build the master branch, otherwise once the release is added, Github
 # creates a tag which triggers another identical build.
@@ -29,6 +30,7 @@ install:
       mkdir downloads ;
     fi;
   - pushd downloads
+  - rm travis_wait*
   - ls -l && ls -l temp
   - if [ ! -f clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/$LLVMVER/clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
@@ -67,7 +69,7 @@ script:
     elif [ $OSXVER = 10.11 ] ; then
       OSX_NAME=el_capitan ;
     fi
-  - pushd downloads && ls
+  - pushd downloads
   - brew tap homebrew/science;
 # Build/Install hdf5
   - if [ -f hdf5-$HDF5.$OSX_NAME.bottle.tar.gz ] ; then

@@ -42,9 +42,12 @@ fi;
 if [ "$BUILD_BOOST" = true ]; then
     echo 'Building boost...';
     time brew unlink boost
-    if [ ! -d boost-$BOOSTVER ]; then
-        time brew unpack --patch --destdir=. boost;
-    else
+    if [ ! -f Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 ]; then
+        #Just unpack and cache.
+        BUILD_BOOST=false;
+    fi;
+    time brew unpack --patch --destdir=. boost;
+    if [ "$BUILD_BOOST" = true ]; then
         pushd boost-$BOOSTVER;
         echo "Bootstrap boost..."
         time ./bootstrap.sh --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib --without-icu --without-libraries=python,mpi > boost_bootstrap.log
