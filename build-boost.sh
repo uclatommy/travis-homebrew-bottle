@@ -49,8 +49,9 @@ if [ "$BUILD_BOOST" = true ]; then
         echo 'Unpack boost and exit...';
         BUILD_BOOST=false;
     fi;
-    time brew unpack --patch --destdir=. boost;
-    if [ "$BUILD_BOOST" = true ]; then
+    if [ "$BUILD_BOOST" = false ]; then
+        time brew unpack --patch --destdir=. boost;
+    else
         echo 'Building boost...';
         pushd boost-$BOOSTVER;
         echo "Bootstrap boost...";
