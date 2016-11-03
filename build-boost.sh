@@ -10,6 +10,7 @@ set -e
 BOOSTVER=$3
 PYTHONVER=$2
 OSXVER=$1
+BUILD_BOOST=$4
 MACOS_SDK="-mmacosx-version-min=$OSXVER";
 if [ $OSXVER = 10.10 ] ; then
     OSX_NAME=yosemite ;
@@ -27,7 +28,7 @@ elif ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
     time brew unlink boost;
     time brew install temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
     BUILD_BOOST=true;
-else
+elif [ "$BUILD_BOOST" = true ]; then
     echo 'Building homebrew bottle...';
     BUILD_BOOST=false;
     brew unlink boost;
@@ -38,6 +39,8 @@ else
     pushd temp;
     brew bottle boost;
     popd;
+else
+    BUILD_BOOST=false;
 fi;
 if [ "$BUILD_BOOST" = true ]; then
     echo 'Building boost...';

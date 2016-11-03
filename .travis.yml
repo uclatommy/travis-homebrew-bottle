@@ -127,6 +127,7 @@ script:
       echo 'Installing python3 from cache...';
       BUILD_PYTHON=false;
       brew install python3-$PYTHONVER*$OSX_NAME.bottle*tar.gz;
+      BUILD_BOOST=true;
     else
       BUILD_PYTHON=true;
     fi;
@@ -157,7 +158,7 @@ script:
   - if [ -f boost-$BOOSTVER.tar.bz2 ]; then
       cp boost-$BOOSTVER.tar.bz2 /Users/travis/Library/Caches/Homebrew;
     fi;
-  - travis_wait 45 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER;
+  - travis_wait 45 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER $BUILD_BOOST;
   - cp /Users/travis/Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 .
 # Build/Install boost-python
   - if ! ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
