@@ -43,14 +43,15 @@ else
     BUILD_BOOST=false;
 fi;
 if [ "$BUILD_BOOST" = true ]; then
-    echo 'Building boost...';
     time brew unlink boost;
     if [ ! -f Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 ]; then
         #Just unpack and cache.
+        echo 'Unpack boost and exit...';
         BUILD_BOOST=false;
     fi;
     time brew unpack --patch --destdir=. boost;
     if [ "$BUILD_BOOST" = true ]; then
+        echo 'Building boost...';
         pushd boost-$BOOSTVER;
         echo "Bootstrap boost...";
         time ./bootstrap.sh --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib --without-icu --without-libraries=python,mpi > boost_bootstrap.log;
@@ -64,7 +65,7 @@ if [ "$BUILD_BOOST" = true ]; then
         echo 'boost headers...';
         time ./b2 headers;
         echo "Building boost...";
-        travis_wait 40 ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static;
+        ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static;
         popd;
         brew link --overwrite boost;
         brew bottle boost;
