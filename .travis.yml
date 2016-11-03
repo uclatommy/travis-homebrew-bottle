@@ -67,8 +67,8 @@ script:
   - BUILD_VALGRIND=true
   - BUILD_PYTHON=true
   - BUILD_HDF5=true
-  - BUILD_BOOST=true
-  - BUILD_BOOST_PYTHON=true
+  - BUILD_BOOST=false
+  - BUILD_BOOST_PYTHON=false
   - if [ $OSXVER = 10.10 ] ; then
       OSX_NAME=yosemite ;
     elif [ $OSXVER = 10.11 ] ; then
@@ -130,6 +130,7 @@ script:
       BUILD_PYTHON=false;
       brew install python3-$PYTHONVER*$OSX_NAME.bottle*tar.gz;
       BUILD_BOOST=true;
+      BUILD_BOOST_PYTHON=true;
     else
       BUILD_PYTHON=true;
     fi;
