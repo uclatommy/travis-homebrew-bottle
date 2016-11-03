@@ -66,7 +66,7 @@ if [ "$BUILD_BOOST" = true ]; then
         echo 'boost headers...';
         time ./b2 headers;
         echo "Building boost...";
-        ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static;
+        ./b2 --prefix=/usr/local/Cellar/boost/$BOOSTVER --libdir=/usr/local/Cellar/boost/$BOOSTVER/lib -d2 -j4 --layout=tagged --user-config=user-config.jam install threading=multi,single link=shared,static > /dev/null;
         popd;
         brew link --overwrite boost;
         brew bottle boost;
