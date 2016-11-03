@@ -44,7 +44,7 @@ else
 fi;
 if [ "$BUILD_BOOST" = true ]; then
     time brew unlink boost;
-    if [ ! -f Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 ]; then
+    if [ ! -f Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 & ! -d boost-$BOOSTVER ]; then
         #Just unpack and cache.
         echo 'Unpack boost and exit...';
         BUILD_BOOST=false;
