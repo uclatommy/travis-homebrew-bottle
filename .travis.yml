@@ -176,9 +176,9 @@ script:
       brew install temp/boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
       BUILD_BOOST_PYTHON=true;
     else
-      echo 'Building homebrew bottle...';
+      echo 'Building homebrew boost-python bottle...';
       BUILD_BOOST_PYTHON=true;
-      brew install --build-bottle boost-python;
+      brew install --build-bottle boost-python --c++11;
       if [ ! -d temp ]; then
         mkdir temp;
       fi;
