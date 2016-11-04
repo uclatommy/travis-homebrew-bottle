@@ -27,18 +27,20 @@ elif ls temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
     echo 'Installing boost from cached homebrew version...';
     time brew unlink boost;
     time brew install temp/boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
-    BUILD_BOOST=true;
+    BUILD_BOOST=false;
 elif [ "$BUILD_BOOST" = true ]; then
     echo 'Building homebrew bottle...';
     BUILD_BOOST=false;
     brew unlink boost;
-    brew install --build-bottle boost;
-    if [ ! -d temp ]; then
-        mkdir temp;
-    fi;
-    pushd temp;
+    export CXX=/usr/local/llvm/bin/clang++;
+    export CC=/usr/local/llvm/bin/clang;
+    brew install --build-bottle boost --c++11;
+    #if [ ! -d temp ]; then
+    #    mkdir temp;
+    #fi;
+    #pushd temp;
     brew bottle boost;
-    popd;
+    #popd;
 else
     BUILD_BOOST=false;
 fi;
