@@ -6,7 +6,9 @@
 #  Created by Thomas Chen on 10/29/16.
 #
 
-set -e
+set -x #verbose
+set -e #exit on error
+
 BOOSTVER=$3
 PYTHONVER=$2
 OSXVER=$1
