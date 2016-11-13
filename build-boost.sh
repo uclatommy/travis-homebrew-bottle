@@ -34,7 +34,7 @@ elif [ "$BUILD_BOOST" = true ]; then
     brew unlink boost;
     export CXX=/usr/local/llvm/bin/clang++;
     export CC=/usr/local/llvm/bin/clang;
-    time brew install --build-bottle boost --c++11;
+    time brew install boost --c++11;
     #if [ ! -d temp ]; then
     #    mkdir temp;
     #fi;
