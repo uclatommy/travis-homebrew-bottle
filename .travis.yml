@@ -6,9 +6,6 @@ matrix:
     - language: cpp
       os: osx
       osx_image: xcode8
-    - language: cpp
-      os: osx
-      osx_image: xcode7.1
 
 before_cache:
   - rm -f $HOME/downloads/travis_wait*.log
@@ -73,6 +70,8 @@ script:
       OSX_NAME=yosemite ;
     elif [ $OSXVER = 10.11 ] ; then
       OSX_NAME=el_capitan ;
+    elif [ $OSXVER = 10.12 ] ; then
+       OSX_NAME=sierra ;
     fi
   - pushd downloads
   - brew tap homebrew/science;
@@ -178,7 +177,7 @@ script:
     else
       echo 'Building homebrew boost-python bottle...';
       BUILD_BOOST_PYTHON=true;
-      brew install --build-bottle boost-python --c++11;
+      brew install --build-bottle boost-python --c++11 --with-python3;
       if [ ! -d temp ]; then
         mkdir temp;
       fi;
