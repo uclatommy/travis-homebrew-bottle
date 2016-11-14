@@ -54,8 +54,8 @@ install:
   - if [ -f /usr/local/bin/clang ]; then
       rm -rf /usr/local/bin/clang;
     fi;
-  - ln -s /usr/local/bin/clang++ /usr/local/llvm/bin/clang++;
-  - ln -s /usr/local/bin/clang /usr/local/llvm/bin/clang;
+  - ln -s /usr/local/llvm/bin/clang++ /usr/local/bin/clang++;
+  - ln -s /usr/local/llvm/bin/clang /usr/local/bin/clang;
   - which clang++;
   - brew install openssl || brew upgrade openssl
   - brew install cmake || brew upgrade cmake
