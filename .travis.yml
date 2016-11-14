@@ -170,26 +170,14 @@ script:
       echo 'Installing boost-python from cache...';
       BUILD_BOOST_PYTHON=false;
       brew install boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
-    elif ls temp/boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
-      echo 'Installing boost-python from cached homebrew version...';
-      brew install temp/boost-python-$BOOSTVER.$OSX_NAME.bottle*tar.gz;
-      BUILD_BOOST_PYTHON=true;
     else
       echo 'Building homebrew boost-python bottle...';
       BUILD_BOOST_PYTHON=true;
-      brew install --build-bottle boost-python --c++11 --with-python3;
-      if [ ! -d temp ]; then
-        mkdir temp;
-      fi;
-      pushd temp;
+      export CXX=/usr/local/llvm/bin/clang++;
+      export CC=/usr/local/llvm/bin/clang;
+      brew install --cc=$CC  --build-bottle boost-python --c++11 --with-python3;
       brew bottle boost-python;
       popd;
-    fi;
-  - if [ "$BUILD_BOOST_PYTHON" = true ]; then
-      echo 'Building boost-python...';
-      chmod 744 ../build-boost-python.sh
-      ./../build-boost-python.sh $OSXVER $PYTHONVER $BOOSTVER;
-      brew bottle boost-python;
     fi;
 # Make bottles
   - popd
