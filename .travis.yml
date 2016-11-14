@@ -51,7 +51,7 @@ install:
   - if [ -f /usr/local/bin/clang++ ]; then
       rm -rf /usr/local/bin/clang++;
     fi;
-  - if[ -f /usr/local/bin/clang ]; then
+  - if [ -f /usr/local/bin/clang ]; then
       rm -rf /usr/local/bin/clang;
     fi;
   - ln -s /usr/local/bin/clang++ /usr/local/llvm/bin/clang++;
