@@ -46,8 +46,17 @@ install:
   - tar -xf clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
   - mv clang+llvm-$LLVMVER-x86_64-apple-darwin /usr/local/llvm;
   - chmod 744 /usr/local/llvm;
-  - export CC=/usr/local/llvm/bin/clang
-  - export CXX=/usr/local/llvm/bin/clang++
+# Trick the system into using llvm
+  - which clang++;
+  - if [ -f /usr/local/bin/clang++ ]; then
+      rm -rf /usr/local/bin/clang++;
+    fi;
+  - if[ -f /usr/local/bin/clang ]; then
+      rm -rf /usr/local/bin/clang;
+    fi;
+  - ln -s /usr/local/bin/clang++ /usr/local/llvm/bin/clang++;
+  - ln -s /usr/local/bin/clang /usr/local/llvm/bin/clang;
+  - which clang++;
   - brew install openssl || brew upgrade openssl
   - brew install cmake || brew upgrade cmake
   - brew install sqlite || brew upgrade sqlite
@@ -173,9 +182,7 @@ script:
     else
       echo 'Building homebrew boost-python bottle...';
       BUILD_BOOST_PYTHON=true;
-      export CXX=/usr/local/llvm/bin/clang++;
-      export CC=/usr/local/llvm/bin/clang;
-      brew install --cc=$CC  --build-bottle boost-python --c++11 --with-python3;
+      brew install --build-bottle boost-python --c++11 --with-python3;
       brew bottle boost-python;
       popd;
     fi;
