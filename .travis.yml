@@ -163,6 +163,7 @@ script:
   - if [ -f boost-$BOOSTVER.tar.bz2 ]; then
       cp boost-$BOOSTVER.tar.bz2 /Users/travis/Library/Caches/Homebrew;
     fi;
+  - ls -l
   - if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       BUILD_BOOST_PYTHON=true;
     fi;
