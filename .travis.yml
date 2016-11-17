@@ -1,11 +1,5 @@
-sudo: false
-
-matrix:
-  fast_finish: true
-  include:
-    - language: cpp
-      os: osx
-      osx_image: xcode8
+os: osx
+osx_image: xcode8
 
 before_cache:
   - rm -f $HOME/downloads/travis_wait*.log
