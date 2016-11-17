@@ -177,7 +177,7 @@ script:
 # Build/Install boost-python
   - if [ "$BUILD_BOOST_PYTHON" = true ]; then
       echo 'Building homebrew boost-python bottle...';
-      brew install --build-bottle boost-python --c++11 --with-python3;
+      brew install --build-bottle boost-python --c++11 --with-python3 --without-python;
       brew bottle boost-python;
     fi;
 # Make bottles
