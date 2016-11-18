@@ -30,7 +30,7 @@ elif [ "$BUILD_BOOST" = true ]; then
     echo 'Building homebrew bottle...';
     BUILD_BOOST=false;
     brew unlink boost;
-    brew install --build-bottle boost --c++11 --with-python3 --without-python;
+    brew install --build-bottle boost --c++11;
     brew bottle boost;
 else
     BUILD_BOOST=false;
