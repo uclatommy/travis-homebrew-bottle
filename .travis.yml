@@ -158,6 +158,26 @@ script:
       brew bottle python3;
       rm -rf python3-$PYTHONVER;
     fi;
+# Build/Install boost
+  - chmod 744 ../build-boost.sh
+  - brew upgrade boost || brew install boost
+  - BUILD_BOOST_PYTHON=true
+#  - if [ -f boost-$BOOSTVER.tar.bz2 ]; then
+#      cp boost-$BOOSTVER.tar.bz2 /Users/travis/Library/Caches/Homebrew;
+#    fi;
+#  - ls -l
+#  - if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
+#      BUILD_BOOST_PYTHON=true;
+#      echo "Will build boost-python...";
+#    fi;
+#  - travis_wait 46 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER $BUILD_BOOST;
+#  - cp /Users/travis/Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 .
+# Build/Install boost-python
+  - if [ "$BUILD_BOOST_PYTHON" = true ]; then
+      echo 'Building homebrew boost-python bottle...';
+      brew install --build-bottle boost-python --with-python3 --without-python;
+      brew bottle boost-python;
+    fi;
 # Make bottles
   - popd
   - mkdir bottles-osx$OSXVER
