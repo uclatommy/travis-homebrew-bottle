@@ -31,14 +31,13 @@ install:
   - if [ ! -f clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/$LLVMVER/clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
     fi;
-  - if [ -d /usr/local/llvm ] ; then
-      rm -r /usr/local/llvm;
+  - if [ ! -d /usr/local/llvm ] ; then
+      mkdir /usr/local/llvm;
+    fi;
+  - if [ ! -d clang+llvm-$LLVMVER-x86_64-apple-darwin ] ; then
+      tar -xf clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
     fi
-  - if [ -d clang+llvm-$LLVMVER-x86_64-apple-darwin ] ; then
-      rm -r clang+llvm-$LLVMVER-x86_64-apple-darwin;
-    fi
-  - tar -xf clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
-  - mv clang+llvm-$LLVMVER-x86_64-apple-darwin /usr/local/llvm;
+  - cp clang+llvm-$LLVMVER-x86_64-apple-darwin/* /usr/local/llvm;
   - chmod 744 /usr/local/llvm;
 # Trick the system into using llvm
   - which clang++;
@@ -167,7 +166,7 @@ script:
   - if ls boost-$BOOSTVER.$OSX_NAME.bottle*tar.gz 1>/dev/null 2>&1; then
       BUILD_BOOST_PYTHON=true;
     fi;
-  - travis_wait 45 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER $BUILD_BOOST;
+  - travis_wait 46 ./../build-boost.sh $OSXVER $PYTHONVER $BOOSTVER $BUILD_BOOST;
   - cp /Users/travis/Library/Caches/Homebrew/boost-$BOOSTVER.tar.bz2 .
 # Build/Install boost-python
   - if [ "$BUILD_BOOST_PYTHON" = true ]; then
