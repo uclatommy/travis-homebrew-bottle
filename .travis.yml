@@ -37,7 +37,8 @@ install:
   - if [ ! -d clang+llvm-$LLVMVER-x86_64-apple-darwin ] ; then
       tar -xf clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
     fi
-  - cp clang+llvm-$LLVMVER-x86_64-apple-darwin/* /usr/local/llvm;
+  - cp clang+llvm-$LLVMVER-x86_64-apple-darwin /usr/local/llvm;
+  - ls /usr/local/llvm;
   - chmod 744 /usr/local/llvm;
 # Trick the system into using llvm
   - which clang++;
