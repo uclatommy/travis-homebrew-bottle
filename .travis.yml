@@ -160,7 +160,7 @@ script:
     fi;
 # Build/Install boost
   - chmod 744 ../build-boost.sh
-  - brew install boost
+  - brew upgrade boost || brew install boost
   - BUILD_BOOST_PYTHON=true
 #  - if [ -f boost-$BOOSTVER.tar.bz2 ]; then
 #      cp boost-$BOOSTVER.tar.bz2 /Users/travis/Library/Caches/Homebrew;
@@ -175,7 +175,7 @@ script:
 # Build/Install boost-python
   - if [ "$BUILD_BOOST_PYTHON" = true ]; then
       echo 'Building homebrew boost-python bottle...';
-      brew install --build-bottle boost-python --with-python3 --without-python;
+      brew install --build-bottle boost-python --with-python3 --without-python --c++11;
       brew bottle boost-python;
     fi;
 # Make bottles
