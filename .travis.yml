@@ -38,7 +38,7 @@ install:
   - if [ ! -f clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/$LLVMVER/clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
     fi;
-  - chown -R travis:admin /usr/local && ls -l /usr;
+  - chown -R $(whoami) /usr/local && ls -l /usr;
   - if [ ! -d /usr/local/llvm ] ; then
       mkdir /usr/local/llvm;
     fi;
