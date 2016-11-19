@@ -38,6 +38,7 @@ install:
   - if [ ! -f clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz ] ; then
       curl -L -O http://llvm.org/releases/$LLVMVER/clang+llvm-$LLVMVER-x86_64-apple-darwin.tar.xz;
     fi;
+  - chmod 755 /usr/local;
   - if [ ! -d /usr/local/llvm ] ; then
       mkdir /usr/local/llvm;
     fi;
